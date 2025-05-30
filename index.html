@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CompliFlow – DSGVO-Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --bg: #f0f4f8;
+      --card-bg: rgba(255, 255, 255, 0.7);
+      --text: #1f2937;
+      --white: #fff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    .hero {
+      background: var(--gradient);
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      background: white;
+      color: var(--primary);
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: var(--radius);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .features {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      margin-top: 40px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 30px;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .hidden-content {
+      display: none;
+      margin-top: 20px;
+      font-size: 0.95rem;
+      text-align: left;
+    }
+
+    .question {
+      margin-bottom: 10px;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+      margin: 0 auto;
+      gap: 12px;
+    }
+
+    .form input {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .form button {
+      background: var(--primary);
+      color: white;
+    }
+
+    .footer {
+      background: var(--gradient);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .status {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .green { color: #22c55e; }
+    .yellow { color: #eab308; }
+    .red { color: #ef4444; }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Modal Styles */
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #modal > div {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px;
+      max-width: 500px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <header class="hero">
+      <h2>CompliFlow – DSGVO Demo</h2>
+      <p>Teste deinen Datenschutzstatus in nur 15 Minuten</p>
+      <button class="btn" onclick="toggleContent('demoStart')">Demo starten</button>
+      <div id="demoStart" class="hidden-content">✅ Demo freigeschaltet – scroll weiter nach unten 👇</div>
+    </header>
+
+    <section class="features">
+      <h2>Was du testen kannst</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>✅ DSGVO-Check</h3>
+          <p>5 Fragen → Status: grün / gelb / rot</p>
+          <button class="btn" onclick="toggleContent('checkDemo')">Check starten</button>
+          <div id="checkDemo" class="hidden-content">
+            <div id="checkForm">
+              <div class="question"><input type="checkbox" id="q1"> Speichern Sie Kundendaten?</div>
+              <div class="question"><input type="checkbox" id="q2"> Nutzen Sie Cloud-Dienste?</div>
+              <div class="question"><input type="checkbox" id="q3"> Haben Sie eine Datenschutzerklärung?</div>
+              <div class="question"><input type="checkbox" id="q4"> Gibt es ein Löschkonzept?</div>
+              <div class="question"><input type="checkbox" id="q5"> Erfassen Sie nur notwendige Daten?</div>
+              <button class="btn" onclick="evaluateCheck()">Auswertung anzeigen</button>
+            </div>
+            <div id="checkResult" style="margin-top: 10px;"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📄 Beispiel-Dokumente</h3>
+          <p>PDFs & Datenschutzerklärung</p>
+          <button class="btn" onclick="toggleContent('docDemo')">Doku ansehen</button>
+          <div id="docDemo" class="hidden-content">
+            <ul style="list-style: none; padding: 0;">
+              <li><a href="#" onclick="openModal('Der AV-Vertrag als PDF ist bald verfügbar.')">📎 AV-Vertrag (PDF)</a></li>
+              <li><a href="#" onclick="openModal('Die TOMs-Liste wird vorbereitet.')">📎 TOMs-Liste (PDF)</a></li>
+              <li><a href="#" onclick="openModal('Die Datenschutzerklärung erscheint bald hier.')">📄 Datenschutzerklärung (Text)</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>📊 Mini-Dashboard</h3>
+          <p>Statusübersicht + Download-Link</p>
+          <button class="btn" onclick="toggleContent('dashDemo')">Dashboard zeigen</button>
+          <div id="dashDemo" class="hidden-content">
+            <p class="status red">DSGVO-Status: 🔴 Kritisch</p>
+            <p>Fehlende Dokumente: 3</p>
+            <button class="btn" onclick="alert('Download-Link folgt bald.')">Audit herunterladen</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Pilotkunde werden</h2>
+      <form class="form" name="pilotbewerbung" id="bewerbung-form">
+  <input type="text" name="name" placeholder="Dein Name" required />
+  <input type="email" name="email" placeholder="Deine E-Mail" required />
+  <button class="btn" type="submit">Jetzt bewerben</button>
+</form>
+
+    </section>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 CompliFlow – DSGVO erledigt. Einfach. Sicher. Digital.</p>
+  </footer>
+
+  
+
+  <script>
+    function toggleContent(id) {
+      var el = document.getElementById(id);
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function evaluateCheck() {
+      const checks = [q1, q2, q3, q4, q5].map(cb => cb.checked);
+      const score = checks.filter(v => v).length;
+      let result = '';
+      if (score >= 4) result = '<span class="green">✅ Status: Grün – Sehr gut!</span>';
+      else if (score >= 2) result = '<span class="yellow">🟡 Status: Mittel – Verbesserung möglich</span>';
+      else result = '<span class="red">🔴 Status: Kritisch – Handlungsbedarf</span>';
+      document.getElementById('checkResult').innerHTML = result;
+    }
+
+    function openModal(text) {
+      document.getElementById('modal-text').innerText = text;
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
+<script>
+  document.getElementById("bewerbung-form").addEventListener("submit", async function(e) {
+    e.preventDefault(); // stoppt das Standard-Form-Verhalten
+
+    const name = this.name.value;
+    const email = this.email.value;
+
+    try {
+      const res = await fetch("/.netlify/functions/sendEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      });
+
+      if (res.ok) {
+        alert("✅ Danke für deine Bewerbung! Du bekommst gleich eine E-Mail.");
+        this.reset();
+      } else {
+        alert("❌ Fehler beim Senden. Bitte versuch's später nochmal.");
+      }
+    } catch (err) {
+      alert("❌ Verbindung zur E-Mail-Funktion fehlgeschlagen.");
+      console.error(err);
+    }
+  });
+</script>
+
+</body>
+</html>
